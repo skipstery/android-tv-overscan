@@ -1,0 +1,9 @@
+dist/
+build/
+.DS_Store
+*.keystore
+*.p12
+*.jks
+.ruff_cache/
+__pycache__/
+.venv/
