@@ -32,6 +32,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4
+        with:
+          packages: ''
+          log-accepted-android-sdk-licenses: false
       - run: sdkmanager 'platforms;android-34' 'build-tools;36.0.0'
       - run: python3 scripts/test_geometry.py
       - run: python3 build.py
