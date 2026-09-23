@@ -13,6 +13,7 @@ Tested on 2026-09-23 with Google TV Streamer running Android TV 14, connected to
 - A screenshot of the updated TV UI confirmed that horizontal ruler labels were rotated and no longer overlapped. The two redundant footer messages were removed.
 - The final UI removes the directional hint and step selector and adds Done. A live test verified that Done closes the app and retains the calibrated output after the home-screen transition settles.
 - A live regression test reproduced stale dimensions during original preview. The compositor was already full-frame, but the UI still showed the saved calibration. After the fix, Show original produces `(0, 0)-(1920, 1080)`, displays 1920 × 1080 with disabled zero-margin fields, and Restore returns the exact saved rectangle.
+- Upgrading from Projector Calibrator 0.1.0 to Android TV Overscan 0.2.0 preserved the 44/44/26/26 profile. The renamed launcher installed the signed update, started display control, and opened the renamed app. The README screenshot was captured from that running version.
 
 ADB screenshots capture the logical scene before the physical output transform. They verify UI layout, while the SurfaceFlinger rectangle and the user's projector view verify the actual correction.
 

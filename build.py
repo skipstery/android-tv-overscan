@@ -143,11 +143,11 @@ def main():
             "-validity",
             "10000",
             "-dname",
-            "CN=Projector Calibrator",
+            "CN=Android TV Overscan",
         )
         if os.name != "nt":
             args.keystore.chmod(0o600)
-    apk = ROOT / "dist/projector-calibrator.apk"
+    apk = ROOT / "dist/android-tv-overscan.apk"
     run(
         jdk("java"),
         "-jar",

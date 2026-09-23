@@ -1,23 +1,35 @@
-# Projector Calibrator
+# Android TV Overscan
 
-Fit Google TV's picture inside a projector that crops the HDMI edges. Run a console utility on your computer, then adjust each edge with the TV remote.
+Fix overscan and cropped screen edges on an Android TV or Google TV box connected to a TV or projector. If the picture looks zoomed in, the screen is too big, or menus are cut off at the edges, adjust the picture to fit the screen with your TV remote.
 
-The utility installs a small Android TV app and starts its display controller through ADB. The computer can disconnect once setup finishes. Settings stay on the streamer.
+The console utility guides you through ADB setup, installs the TV app, and starts display control. Adjust the left, right, top, and bottom margins in pixels, then select **Done**. The computer can disconnect once setup finishes.
 
-## Start
+**Requires Android TV 14 and ADB. No root required.** Tested on Google TV Streamer with a ZEEMR Z1 Pro projector at 1920 × 1080. Other Android TV boxes are unverified.
 
-Download and extract `projector-calibrator-0.1.0.zip` from [Releases](https://github.com/skipstery/projector-calibrator/releases). It contains the launcher, a signed APK, and these instructions. You need [Python 3.9 or later](https://www.python.org/downloads/).
+![Android TV Overscan app with a screen calibration grid, four margin controls, and a Done button](docs/images/overscan-calibration.png)
+
+## Screen edges cut off or picture too big?
+
+Overscan hides part of the HDMI picture outside the visible screen. It affects televisions as well as projectors, and can make the whole interface look enlarged or leave app controls partly off-screen. [Apple's explanation of overscan](https://support.apple.com/en-ie/102202) covers both display types.
+
+First check your display or TV box for **Overscan**, **Fit to Screen**, or a similar picture-size setting. Some devices already provide this adjustment, including [NVIDIA SHIELD](https://www.nvidia.com/en-eu/shield/support/shield-tv-pro/). This app provides software overscan compensation when your setup has no usable built-in control.
+
+It shrinks Android's picture inside the current HDMI output. The calibration grid helps you find the visible edges; the output resolution stays unchanged.
+
+## Download and run
+
+Download and extract `android-tv-overscan-0.2.0.zip` from [Releases](https://github.com/skipstery/android-tv-overscan/releases). It contains the launcher, a signed APK, and these instructions. You need [Python 3.9 or later](https://www.python.org/downloads/).
 
 Open a terminal in the extracted folder. On macOS or Linux:
 
 ```sh
-python3 projector_calibrator.py
+python3 android_tv_overscan.py
 ```
 
 On Windows:
 
 ```powershell
-py projector_calibrator.py
+py android_tv_overscan.py
 ```
 
 The English setup guide walks you through:
@@ -49,7 +61,7 @@ Every successful adjustment is saved automatically. Each edge is independent, so
 
 Run the same command again. The TV app remembers the margins and the utility restores display control. You normally do not need to pair again, but wireless debugging may need to be re-enabled and its connection port can change.
 
-The controller stays alive after the console exits and while other TV apps are open. Opening Projector Calibrator from the TV's apps list lets you adjust again while the controller is running. Reopening the app also reapplies the saved correction if another system action reset the projection.
+The controller stays alive after the console exits and while other TV apps are open. Opening Android TV Overscan from the TV's apps list lets you adjust again while the controller is running. Reopening the app also reapplies the saved correction if another system action reset the projection.
 
 If the app is force-stopped, updated, or killed, rerun the utility. This version cannot restart the privileged controller by itself after a full reboot.
 
@@ -64,6 +76,12 @@ The HDMI mode stays unchanged. The controller places Android's composed picture 
 
 The controller watches for display state and mode changes and reloads the saved profile for the connected display. HDMI switching, HDR/DRM video paths, and other vendor firmware need device testing; they are not part of the current compatibility claim.
 
+### Does it fix Chromecast, NVIDIA SHIELD, or Xiaomi TV Box overscan?
+
+Only Google TV Streamer has been tested with this app. Chromecast with Google TV, NVIDIA SHIELD, Xiaomi TV Box, and other Android TV devices are unverified. Android TV 14 is required; devices running other Android versions are currently rejected.
+
+The overscan problem itself also affects other manufacturers' boxes. For example, [Xiaomi documents incomplete pictures when its box is connected to a TV](https://www.mi.com/global/support/faq/details/KA-548390/). That does not establish compatibility with this app.
+
 ## Connection help
 
 On Google TV, open **Settings > System > About**, select **Android TV OS build** seven times, then return to **System > Developer options**. Some manufacturers put **About** under **Device Preferences**. Android documents enabling development on [TV devices](https://developer.android.com/training/tv/get-started/create#run-on-real-device).
@@ -77,13 +95,13 @@ If pairing works but connecting fails, check the current connection port, guest 
 ## Command options
 
 ```sh
-python3 projector_calibrator.py --help
-python3 projector_calibrator.py --connect 192.168.1.50:37123
-python3 projector_calibrator.py --pair 192.168.1.50:40211 --connect 192.168.1.50:37123
-python3 projector_calibrator.py --serial DEVICE_SERIAL --non-interactive
-python3 projector_calibrator.py --adb /path/to/adb --apk /path/to/projector-calibrator.apk
-python3 projector_calibrator.py --restart
-python3 projector_calibrator.py --reinstall
+python3 android_tv_overscan.py --help
+python3 android_tv_overscan.py --connect 192.168.1.50:37123
+python3 android_tv_overscan.py --pair 192.168.1.50:40211 --connect 192.168.1.50:37123
+python3 android_tv_overscan.py --serial DEVICE_SERIAL --non-interactive
+python3 android_tv_overscan.py --adb /path/to/adb --apk /path/to/android-tv-overscan.apk
+python3 android_tv_overscan.py --restart
+python3 android_tv_overscan.py --reinstall
 ```
 
 `--restart` restarts this app and its helper. `--reinstall` installs the supplied APK again and keeps preferences if its signature matches. Neither option reboots the streamer.
@@ -95,10 +113,10 @@ Install JDK 17 or later, Android SDK platform 34, and build tools 36.0.0:
 ```sh
 sdkmanager "platforms;android-34" "build-tools;36.0.0"
 python3 build.py --sdk /path/to/android-sdk --java-home /path/to/jdk
-python3 projector_calibrator.py --reinstall
+python3 android_tv_overscan.py --reinstall
 ```
 
-`ANDROID_HOME` and `JAVA_HOME` can provide the paths. No Gradle installation is required. `build.py` creates `dist/projector-calibrator.apk` and a persistent local signing key at `~/.cache/projector-calibrator/signing.p12`. Keep that key for future compatible updates. A different key requires uninstalling the old app, which deletes its preferences.
+`ANDROID_HOME` and `JAVA_HOME` can provide the paths. No Gradle installation is required. `build.py` creates `dist/android-tv-overscan.apk` and a persistent local signing key at `~/.cache/projector-calibrator/signing.p12`. Keep that key for future compatible updates. A different key requires uninstalling the old app, which deletes its preferences.
 
 The default key password is for local development. For a release, supply `--keystore` and `CALIBRATOR_STORE_PASSWORD`. Never commit or distribute the private signing key.
 

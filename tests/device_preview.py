@@ -46,7 +46,7 @@ def projection():
 before = projection()
 print("Calibrated output rectangle:", before[2:], flush=True)
 labels = [n.get("text") for n in nodes()]
-assert "Projector Calibrator" in labels, "Open the calibrator before running this test"
+assert "Android TV Overscan" in labels, "Open the calibrator before running this test"
 assert "Restore" not in labels, "Start with correction enabled"
 try:
     click("Show original" if "Show original" in labels else "Original")

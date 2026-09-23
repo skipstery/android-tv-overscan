@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-import projector_calibrator as app
+import android_tv_overscan as app
 
 
 class LauncherTests(unittest.TestCase):

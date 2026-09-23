@@ -41,7 +41,7 @@ public final class ShellBridge extends Binder {
       ShellBridge bridge = new ShellBridge(args.length == 0 ? 0 : Integer.parseInt(args[0]));
       bridge.attach();
       bridge.watch();
-      System.out.println("READY Projector Calibrator bridge");
+      System.out.println("READY Android TV Overscan bridge");
       System.out.flush();
       Looper.loop();
     } catch (Throwable error) {

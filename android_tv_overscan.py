@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guided ADB setup and launcher for Projector Calibrator. Python 3.9+, no pip dependencies."""
+"""Guided ADB setup and launcher for Android TV Overscan. Python 3.9+, no pip dependencies."""
 
 import argparse
 import getpass
@@ -22,7 +22,7 @@ PACKAGE = "com.skipstery.projectorcalibrator"
 AUTHORITY = PACKAGE + ".bridge"
 PLATFORM_TOOLS = "https://developer.android.com/tools/releases/platform-tools"
 ADB_GUIDE = "https://developer.android.com/tools/adb#connect-to-a-device-over-wi-fi"
-LOG = "/data/local/tmp/projector-calibrator-bridge.log"
+LOG = "/data/local/tmp/android-tv-overscan-bridge.log"
 
 
 class SetupError(Exception):
@@ -76,7 +76,7 @@ def download_adb(cache):
     )
     cache.mkdir(parents=True, exist_ok=True)
     print("Downloading Android SDK Platform-Tools from dl.google.com...")
-    with tempfile.TemporaryDirectory(prefix="projector-calibrator-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="android-tv-overscan-") as temporary:
         archive = Path(temporary) / "platform-tools.zip"
         with (
             urllib.request.urlopen(url, timeout=60) as response,
@@ -101,7 +101,7 @@ def download_adb(cache):
 
 
 def find_adb(explicit, interactive):
-    cache = Path.home() / ".cache" / "projector-calibrator"
+    cache = Path.home() / ".cache" / "android-tv-overscan"
     candidates = (
         [explicit]
         if explicit
@@ -299,7 +299,7 @@ def helper_command(apk, user):
         raise SetupError("Invalid installed APK path or Android user ID.")
     return (
         "CLASSPATH=" + shlex.quote(apk) + " nohup app_process /system/bin "
-        "--nice-name=projector-calibrator-bridge "
+        "--nice-name=android-tv-overscan-bridge "
         + PACKAGE
         + ".ShellBridge "
         + str(user)
@@ -433,7 +433,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     interactive = not args.non_interactive and sys.stdin.isatty()
     try:
-        print("Projector Calibrator\n[1/4] Checking ADB...")
+        print("Android TV Overscan\n[1/4] Checking ADB...")
         adb = find_adb(args.adb, interactive)
         run([adb, "start-server"])
         print("[2/4] Connecting to your streamer...")
@@ -443,9 +443,9 @@ def main(argv=None):
             print(run([adb, "connect", endpoint(args.connect)], check=False))
         serial = select_device(adb, args.serial, interactive)
         folder = Path(__file__).resolve().parent
-        apk = args.apk or folder / "projector-calibrator.apk"
+        apk = args.apk or folder / "android-tv-overscan.apk"
         if not args.apk and not apk.is_file():
-            apk = folder / "dist" / "projector-calibrator.apk"
+            apk = folder / "dist" / "android-tv-overscan.apk"
         launch(adb, serial, apk, args.reinstall, args.restart)
         return 0
     except (SetupError, OSError, zipfile.BadZipFile) as error:

@@ -39,7 +39,7 @@ public final class MainActivity extends Activity {
           try {
             if (!BridgeClient.connected())
               throw new IllegalStateException(
-                  "Run projector_calibrator.py on your computer to connect");
+                  "Run android_tv_overscan.py on your computer to connect");
             value = BridgeClient.transact(null, true);
             if (reapplyOnResume) {
               value = BridgeClient.transact(value, true);
@@ -76,7 +76,7 @@ public final class MainActivity extends Activity {
         new FrameLayout.LayoutParams(
             dp(490), FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
     root.addView(panel, box);
-    TextView title = label("Projector Calibrator", 23);
+    TextView title = label("Android TV Overscan", 23);
     title.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
     panel.addView(title);
     dimensions = label("Connecting to display...", 13);
@@ -161,7 +161,7 @@ public final class MainActivity extends Activity {
           }
         });
     rows[3].setNextFocusDownId(done.getId());
-    status = label("Run projector_calibrator.py on your computer to connect", 12);
+    status = label("Run android_tv_overscan.py on your computer to connect", 12);
     status.setPadding(0, dp(7), 0, 0);
     panel.addView(status);
     setContentView(root);
